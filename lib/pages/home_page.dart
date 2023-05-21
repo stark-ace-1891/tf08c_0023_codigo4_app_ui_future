@@ -89,7 +89,13 @@ class HomePage extends StatelessWidget {
                       horizontal: 24,
                       vertical: 16,
                     ),
-                    color: Colors.white.withOpacity(0.72),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.72),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(56),
+                      ),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
