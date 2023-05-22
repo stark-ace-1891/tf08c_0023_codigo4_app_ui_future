@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:tf08c_0023_codigo4_app_ui_future/data/fake_data.dart';
+import 'package:tf08c_0023_codigo4_app_ui_future/widget/item_categories_widget.dart';
+import 'package:tf08c_0023_codigo4_app_ui_future/widget/item_slider_widget.dart';
 
 class HomePage extends StatelessWidget {
+  FakeData data = FakeData();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
+    print(data.getPlaces());
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_location),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '',
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Container(
@@ -162,7 +193,113 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Hot places",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "SEE ALL",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                FutureBuilder(
+                  future: data.getPlaces(),
+                  builder: (BuildContext context, AsyncSnapshot snap) {
+                    if (snap.hasData) {
+                      print(snap.data);
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: snap.data
+                              .map((element) {
+                                return ItemSliderWidget(
+                                  name: element["name"],
+                                  rate: element["rate"].toString(),
+                                  reviews: element["reviews"].toString(),
+                                  image: element["image"].toString(),
+                                );
+                              })
+                              .whereType<Widget>()
+                              .toList(),
+                        ),
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Categories",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "SEE ALL",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ItemCategoriesWidget(
+                        texto: "Art & Cultures",
+                        color: Color(0xff5B57FA),
+                        icon: Icons.art_track,
+                      ),
+                      ItemCategoriesWidget(
+                        texto: "Art & Cultures",
+                        color: Color(0xff41D6FA),
+                        icon: Icons.star,
+                      ),
+                      ItemCategoriesWidget(
+                        texto: "Fest",
+                        color: Colors.blue,
+                        icon: Icons.settings,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
